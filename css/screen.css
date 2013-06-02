@@ -1,0 +1,15 @@
+body {
+      background: #222426;
+      color: white;
+}
+
+a {
+    color: #3ea8f4;
+}
+a:visited {
+    color: #f53da8;
+}
+
+.container {
+    padding: 20px;
+}
