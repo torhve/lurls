@@ -3,15 +3,14 @@ local cjson = require "cjson"
 local pg = require "resty.postgres" -- https://github.com/azurewang/lua-resty-postgres
 local http = require "resty.http.simple" -- https://github.com/bakins/lua-resty-http-simple
 
+local conf
+if not conf then
+    local f = assert(io.open(ngx.var.document_root .. "/config.json", "r"))
+    local c = f:read("*all")
+    f:close()
 
-local conf = {
-    db = {
-        host = '127.0.0.1',
-        database = 'irc',
-        user = 'lorelai',
-        password = 'l0rel4i',
-    }
-}
+    conf = cjson.decode(c)
+end
 
 local function dbreq(sql)
     local db = pg:new()
