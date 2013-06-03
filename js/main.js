@@ -85,6 +85,14 @@ function UrlCtrl($scope, $routeParams, urlService, youtube) {
             this.text = '';
         }
     }
+    $scope.imageSearch = function() {
+        var query = '(\.png|\.gif|\.jpg)$'
+        urlService.search($routeParams.channelName, query);
+    }
+    $scope.videoSearch = function() {
+        var query = 'youtu.?be'
+        urlService.search($routeParams.channelName, query);
+    }
 }
 
 

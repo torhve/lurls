@@ -5,6 +5,7 @@ body {
 
 a {
     color: #3ea8f4;
+    text-decoration: none;
 }
 a:visited {
     color: #f53da8;
@@ -23,6 +24,9 @@ a:visited {
         padding-left: 30px;
         float: left;
         font-weight: bold;
+        color: white;
+    }
+    .topbar a, .topbar a:visisted {
         color: white;
     }
 
