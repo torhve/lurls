@@ -71,15 +71,20 @@ function youtube_parser(url){
 function Url(urlobj) {
     angular.extend(this, urlobj);
     this.display = this.url;
-    if(this.display.endsWith('.jpg') || this.display.endsWith('.png')) {
+    var youtube = youtube_parser(this.url);
+    var urlower = this.url.toLowerCase();
+    if(urlower.endsWith('.jpg') || urlower.endsWith('.png') || urlower.endsWith('.gif')) {
         this.display = '<img src='+this.url+'>';
     }
-    var youtube = youtube_parser(this.url);
-    if (youtube) {
+    else if (youtube) {
         this.display = '<br><iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+youtube+'?html5=1" allowfullscreen frameborder="0"></iframe>';
     }
+    else {
+        this.display = '';
+    }
 
-    this.display = this.message.replace(this.url, this.display);
+    this.message = this.message.replace(this.url, '<a href="'+this.url+'">'+this.url+'</a>');
+
 
 }
 

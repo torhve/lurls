@@ -4,7 +4,7 @@
         <span class="nick">{{url.nick}}</span>
         <span class="time">{{url.time}}</span>
         <br>
-        <a href="{{url.url}}" ng-bind-html-unsafe="url.display"></a>
+        <div><span class="message" ng-bind-html-unsafe="url.message"></span><div ng-bind-html-unsafe="url.display"></div></div>
     </li>
 </ul>
 <button ng-click="loadMoreUrls()">Show more</button>
