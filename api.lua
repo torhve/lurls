@@ -43,6 +43,11 @@ local function recent(match)
     else 
         return 'Need channelname'
     end
+
+    if args['query'] then
+        where = where .. string.format(" AND url ~* '%s'", args['query'])
+    end
+
     if tonumber(args['amount']) then
         limit = tonumber(args['amount'])
     end
