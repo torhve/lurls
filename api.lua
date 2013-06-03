@@ -27,14 +27,35 @@ local function dbreq(sql)
     if not ok then
         ngx.say(err)
     end
-    ---ngx.log(ngx.ERR, '___ SQL ___'..sql)
+    ngx.log(ngx.ERR, '___ SQL ___'..sql)
     local res, err = db:query(sql)
     db:set_keepalive(0,10)
     return res
 end
 
 local function recent(match) 
-    return cjson.encode(dbreq('SELECT * from urls ORDER BY time DESC limit 50'))
+    local limit = 50
+    local offset = 0
+    local args = ngx.req.get_uri_args()
+    local where = ''
+    if args['channelName'] then
+        where = string.format("WHERE channel = '#%s'", pg.escape_string(args['channelName']))
+    else 
+        return 'Need channelname'
+    end
+    if tonumber(args['amount']) then
+        limit = tonumber(args['amount'])
+    end
+    if tonumber(args['page']) then
+        offset = (tonumber(args['page']) * limit)-limit
+    end
+    return cjson.encode(dbreq([[
+        SELECT * 
+        FROM urls 
+        ]]..where..[[
+        ORDER BY time DESC 
+        LIMIT ]]..limit..[[
+        OFFSET ]]..offset))
 end
 
 

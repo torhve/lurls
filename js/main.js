@@ -1,3 +1,60 @@
+var lurls = angular.module('lurls', [], function($routeProvider, $locationProvider) {
+
+    $locationProvider.html5Mode(true);
+
+    $routeProvider
+        .when('/', {
+            templateUrl: '/templates/index.html',
+            controller: AppCntl})
+        .when('/channel/:channelName', { templateUrl: '/templates/urls.html', controller: UrlCtrl})
+        .otherwise({redirectTo: '/'});
+
+});
+
+lurls.factory('urlService', function($http) {
+    var urls = {
+        pagesShown: 1,
+        pageSize: 50,
+        all: [],
+        getUrlsForChannel: function(channelName) {
+            $http({
+                url:'/api/', 
+                method: 'GET',
+                params: {
+                    channelName: channelName,
+                    page: urls.pagesShown,
+                    amount: urls.pageSize
+                }
+            })
+            .then(function(data) {
+                angular.forEach(data.data, function(urlobj) {
+                    urls.all.push(new Url(urlobj));
+                });
+            });
+        },
+        loadMore: function(channelName) {
+            urls.pagesShown++;
+            urls.getUrlsForChannel(channelName);
+        }
+    };
+    return urls;
+});
+
+var AppCntl = function ($scope) {
+
+};
+
+function UrlCtrl($scope, $routeParams, urlService) {
+    $scope.channelName = $routeParams.channelName;
+    $scope.urls = urlService;
+    // Load URLs
+    urlService.getUrlsForChannel($scope.channelName);
+
+    $scope.loadMoreUrls = function() {
+        urlService.loadMore($scope.channelName);
+    }
+}
+
 String.prototype.endsWith = function(suffix) {
         return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
@@ -24,12 +81,3 @@ function Url(urlobj) {
 
 }
 
-function UrlCtrl($scope, $http) {
-    $scope.urls = [];
-// TODO service
-    $http.get('/api/').then(function(data) {
-        angular.forEach(data.data, function(urlobj) {
-            $scope.urls.push(new Url(urlobj));
-        });
-    });
-}
