@@ -27,7 +27,7 @@ local function dbreq(sql)
     if not ok then
         ngx.say(err)
     end
-    ngx.log(ngx.ERR, '___ SQL ___'..sql)
+    --ngx.log(ngx.ERR, '___ SQL ___'..sql)
     local res, err = db:query(sql)
     db:set_keepalive(0,10)
     return res

@@ -1,11 +1,10 @@
-<h5>URLs for channel #{{ channelName }}</h5>
+<h5>URLs for channel <span class="brand">#{{ channelName }}</span></h5>
 <ul class="unstyled">
     <li ng-repeat="url in urls.all">
-    <span>{{url.time}}</span>
-    <span>{{url.channel}}</span>
-    <span>{{url.nick}}</span>
-    <br>
-    <span><a href="{{url.url}}" ng-bind-html-unsafe="url.display"></a></span>
+        <span class="nick">{{url.nick}}</span>
+        <span class="time">{{url.time}}</span>
+        <br>
+        <a href="{{url.url}}" ng-bind-html-unsafe="url.display"></a>
     </li>
 </ul>
 <button ng-click="loadMoreUrls()">Show more</button>

@@ -76,8 +76,10 @@ function Url(urlobj) {
     }
     var youtube = youtube_parser(this.url);
     if (youtube) {
-        this.display = '<iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+youtube+'?html5=1" allowfullscreen frameborder="0"></iframe>';
+        this.display = '<br><iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/'+youtube+'?html5=1" allowfullscreen frameborder="0"></iframe>';
     }
+
+    this.display = this.message.replace(this.url, this.display);
 
 }
 
