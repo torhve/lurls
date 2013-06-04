@@ -33,15 +33,15 @@ local function dbreq(sql)
     return res
 end
 
-local function recent(match) 
+local function argsToConstraints()
+    local args = ngx.req.get_uri_args()
     local limit = 50
     local offset = 0
-    local args = ngx.req.get_uri_args()
     local where = ''
     if args['channelName'] then
         where = string.format("WHERE channel = '#%s'", pg.escape_string(args['channelName']))
     else 
-        return 'Need channelname'
+        ngx.exit(403)
     end
 
     if args['query'] then
@@ -54,6 +54,11 @@ local function recent(match)
     if tonumber(args['page']) then
         offset = (tonumber(args['page']) * limit)-limit
     end
+    return where, limit, offset
+end
+
+local function recent(match) 
+    local where, limit, offset = argsToConstraints()
     return cjson.encode(dbreq([[
         SELECT * 
         FROM urls 
@@ -63,9 +68,28 @@ local function recent(match)
         OFFSET ]]..offset))
 end
 
+local function topurl(match)
+    local where, limit, offset = argsToConstraints()
+    local sql = [[
+        SELECT 
+            url,
+            count(*) as count
+        FROM 
+            urls
+        ]]..where..[[
+        GROUP BY url
+        ORDER BY count DESC
+        LIMIT ]]..limit..[[
+        OFFSET ]]..offset
+    local ok = dbreq(sql)
+    ngx.log(ngx.ERR, sql)
+    return cjson.encode(ok)
+end
+
 
 local routes = {
-    ['$'] = recent,
+    ['$']    = recent,
+    ['topurl$'] = topurl,
 }
 -- Set the content type
 ngx.header.content_type = 'application/json';
