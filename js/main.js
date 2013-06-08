@@ -56,8 +56,6 @@ lurls.factory('urlService', ['$http', 'youtube', function($http, youtube) {
 function UrlCtrl($scope, $routeParams, urlService, youtube) {
     $scope.channelName = $routeParams.channelName;
     $scope.urls = urlService;
-    // Load URLs
-    urlService.getUrlsForChannel($scope.channelName);
 
     $scope.loadMoreUrls = function() {
         urlService.loadMore($scope.channelName);
@@ -90,9 +88,19 @@ function UrlCtrl($scope, $routeParams, urlService, youtube) {
         urlService.search($routeParams.channelName, query);
     }
     $scope.videoSearch = function() {
-        var query = 'youtu.?be'
+        var query = '(youtu.?be|vimeo.com)'
         urlService.search($routeParams.channelName, query);
     }
+    $scope.mediaSearch = function() {
+        var query = '(youtu.?be|vimeo.com|\.png$|\.gif$|\.jpg$)'
+        urlService.search($routeParams.channelName, query);
+    }
+    $scope.resetSearch = function() {
+        urlService.getUrlsForChannel($routeParams.channelName);
+    }
+
+    // Load URLs, default i mediasearch1
+    $scope.mediaSearch();
 }
 
 
